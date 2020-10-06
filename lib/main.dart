@@ -1,3 +1,5 @@
+// import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -69,32 +71,71 @@ class Board extends StatefulWidget {
 
 class _BoardState extends State<Board> {
   List _gameState = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+  List _score = [0, 0];
+  int _count = 0;
   bool _currentPlayerOne = true;
+
+  Widget _controls() => ButtonBar(
+        children: [
+          FlatButton(
+            onPressed: null,
+            onLongPress: () {
+              setState(() {
+                _gameState = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+                _score = [0, 0];
+                _count = 0;
+                _currentPlayerOne = true;
+              });
+            },
+            child: Text("Hold for New Game"),
+          ),
+          // Reset button
+          FlatButton(
+            onPressed: () {},
+            onLongPress: () {
+              setState(() {
+                _gameState = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+              });
+            },
+            child: Text("Hold To Reset..."),
+          )
+        ],
+      );
+
+/*  Create some more widgets for player display, etc */
+  Widget _gameBoard() => Expanded(
+        child: GridView.builder(
+          gridDelegate:
+              SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+          itemBuilder: (context, index) => InkWell(
+            child: Spot(
+              player: _gameState[index],
+              index: index,
+            ),
+            onTap: () {
+              setState(() {
+                if (_currentPlayerOne && _gameState[index] == 0) {
+                  _gameState[index] = 1;
+                  _currentPlayerOne = false;
+                } else if (!_currentPlayerOne && _gameState[index] == 0) {
+                  _gameState[index] = 2;
+                  _currentPlayerOne = true;
+                }
+                /* Check win/ draw conditions in here and set the states */
+              });
+            },
+          ),
+          itemCount: 9,
+        ),
+      );
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: GridView.builder(
-        gridDelegate:
-            SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
-        itemBuilder: (context, index) => InkWell(
-          child: Spot(
-            player: _gameState[index],
-            index: index,
-          ),
-          onTap: () {
-            setState(() {
-              if (_currentPlayerOne && _gameState[index] == 0) {
-                _gameState[index] = 1;
-                _currentPlayerOne = false;
-              } else if (!_currentPlayerOne && _gameState[index] == 0) {
-                _gameState[index] = 2;
-                _currentPlayerOne = true;
-              }
-            });
-          },
-        ),
-        itemCount: 9,
-      ),
+    return Column(
+      children: [
+        _controls(),
+        _gameBoard(),
+      ],
     );
   }
 }
