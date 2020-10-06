@@ -71,9 +71,39 @@ class Board extends StatefulWidget {
 
 class _BoardState extends State<Board> {
   List _gameState = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-  List _score = [0, 0];
-  int _count = 0;
+  List _score = [0, 0, 0]; //p1, p2, draws
+  int _count = 1;
   bool _currentPlayerOne = true;
+
+  Widget _playerDisplay(int player, int score, bool current) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Player $player"),
+              Text(current ? "Your Turn!" : "Your Opponent's turn")
+            ],
+          ),
+        ),
+        Text("Wins: $score"),
+      ],
+    );
+  }
+
+  Widget _display() => Container(
+        padding: const EdgeInsets.all(4),
+        child: Row(
+          children: [
+            Text("Game $_count."),
+            Text("P1 Score: ${_score[0]}"),
+            Text("P2 Score: ${_score[1]}"),
+            Text("Draws: ${_score[2]}"),
+          ],
+        ),
+      );
 
   Widget _controls() => ButtonBar(
         children: [
@@ -82,27 +112,26 @@ class _BoardState extends State<Board> {
             onLongPress: () {
               setState(() {
                 _gameState = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-                _score = [0, 0];
-                _count = 0;
+                _score = [0, 0, 0];
+                _count = 1;
                 _currentPlayerOne = true;
               });
             },
-            child: Text("Hold for New Game"),
+            child: Text("Hold for New Session"),
           ),
           // Reset button
           FlatButton(
-            onPressed: () {},
-            onLongPress: () {
+            onPressed: () {
               setState(() {
                 _gameState = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+                _count += 1;
               });
             },
-            child: Text("Hold To Reset..."),
+            child: Text("Next Round!"),
           )
         ],
       );
 
-/*  Create some more widgets for player display, etc */
   Widget _gameBoard() => Expanded(
         child: GridView.builder(
           gridDelegate:
@@ -133,8 +162,11 @@ class _BoardState extends State<Board> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        _display(),
         _controls(),
         _gameBoard(),
+        _playerDisplay(1, _score[0], _currentPlayerOne),
+        _playerDisplay(2, _score[1], !_currentPlayerOne),
       ],
     );
   }
