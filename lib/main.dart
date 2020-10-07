@@ -78,7 +78,7 @@ class _GameState extends State<Game> {
 
   Widget _playerDisplay(int player, int score, bool current) {
     return Container(
-      padding: EdgeInsets.all(4),
+      padding: EdgeInsets.all(6),
       margin: EdgeInsets.all(4),
       decoration: BoxDecoration(
         border: Border.all(
@@ -149,7 +149,7 @@ class _GameState extends State<Game> {
             child: Text("Hold for New Session"),
           ),
           // Next Round Button
-          FlatButton(
+          RaisedButton(
             onPressed: () {
               setState(() {
                 _gameState = [0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -216,13 +216,13 @@ class _GameState extends State<Game> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _display(),
         Transform.rotate(
           angle: pi,
           child: _playerDisplay(2, _score[1], !_currentPlayerOne),
         ),
         _controls(),
         _board(),
+        _display(),
         _playerDisplay(1, _score[0], _currentPlayerOne),
       ],
     );
