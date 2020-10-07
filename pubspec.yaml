@@ -1,5 +1,5 @@
 name: tic_tac_toe
-description: A new Flutter project.
+description: Two player tic tac toe built in flutter.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
@@ -30,6 +30,7 @@ dependencies:
   cupertino_icons: ^1.0.0
 
 dev_dependencies:
+  flutter_launcher_icons: "^0.8.1"
   flutter_test:
     sdk: flutter
 
@@ -74,3 +75,8 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+flutter_icons:
+  image_path: "assets/icon.png"
+  android: true
+  ios: true
