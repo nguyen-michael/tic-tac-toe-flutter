@@ -74,32 +74,57 @@ class _GameState extends State<Game> {
   List _score = [0, 0, 0]; //p1, p2, draws
   int _count = 1;
   bool _currentPlayerOne = true;
+  bool _roundEnded = false;
 
   Widget _playerDisplay(int player, int score, bool current) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("Player $player"),
-              Text(current ? "Your Turn!" : "Your Opponent's turn")
-            ],
-          ),
+    return Container(
+      padding: EdgeInsets.all(4),
+      margin: EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        border: Border.all(
+            color: player == 1 ? Colors.blue[300] : Colors.red[300],
+            width: 1,
+            style: BorderStyle.solid),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(8),
+          bottomRight: Radius.circular(8),
         ),
-        Text("Wins: $score"),
-      ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Player $player",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: player == 1 ? Colors.blue[400] : Colors.red[400]),
+                ),
+                current
+                    ? Text("Your Turn!")
+                    : Text(
+                        "Your Opponent's turn!",
+                        style: TextStyle(
+                            fontStyle: FontStyle.italic, color: Colors.grey),
+                      ),
+              ],
+            ),
+          ),
+          Text("Wins: $score"),
+        ],
+      ),
     );
   }
 
   Widget _display() => Container(
         padding: const EdgeInsets.all(4),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Text("Game $_count."),
-            Text("P1 Score: ${_score[0]}"),
-            Text("P2 Score: ${_score[1]}"),
+            Text("Game $_count"),
             Text("Draws: ${_score[2]}"),
           ],
         ),
@@ -118,6 +143,7 @@ class _GameState extends State<Game> {
                 _score = [0, 0, 0];
                 _count = 1;
                 _currentPlayerOne = true;
+                _roundEnded = false;
               });
             },
             child: Text("Hold for New Session"),
@@ -128,6 +154,8 @@ class _GameState extends State<Game> {
               setState(() {
                 _gameState = [0, 0, 0, 0, 0, 0, 0, 0, 0];
                 _count += 1;
+                _currentPlayerOne = _count.isOdd;
+                _roundEnded = false;
               });
             },
             child: Text("Next Round!"),
@@ -146,14 +174,37 @@ class _GameState extends State<Game> {
             ),
             onTap: () {
               setState(() {
-                if (_currentPlayerOne && _gameState[index] == 0) {
+                if (_currentPlayerOne &&
+                    _gameState[index] == 0 &&
+                    !_roundEnded) {
                   _gameState[index] = 1;
-                  _currentPlayerOne = false;
-                } else if (!_currentPlayerOne && _gameState[index] == 0) {
+                } else if (!_currentPlayerOne &&
+                    _gameState[index] == 0 &&
+                    !_roundEnded) {
                   _gameState[index] = 2;
-                  _currentPlayerOne = true;
                 }
-                /* Check win/ draw conditions in here and set the states */
+                // Check win/ draw conditions
+                // Win Conditions
+                if (_currentPlayerOne &&
+                    checkWin(1, _gameState) &&
+                    !_roundEnded) {
+                  _score[0] += 1;
+                  _roundEnded = true;
+                } else if (!_currentPlayerOne &&
+                    checkWin(2, _gameState) &&
+                    !_roundEnded) {
+                  _score[1] += 1;
+                  _roundEnded = true;
+                }
+
+                // Draw Condition: All Spots played and no win caught
+                if (!_gameState.contains(0) && !_roundEnded) {
+                  _score[2] += 1;
+                  _roundEnded = true;
+                }
+
+                // Turn over to other player once everything falls through
+                if (!_roundEnded) _currentPlayerOne = !_currentPlayerOne;
               });
             },
           ),
@@ -178,10 +229,9 @@ class _GameState extends State<Game> {
   }
 }
 
-/* Utility function that checks if a player has won */
-/* Invoked right after a player plays */
-bool checkWin(int player, List<int> gameState) {
-  List<List<int>> winConditions = [
+/// Checks if a player has won.
+bool checkWin(int player, List gameState) {
+  List<List> winConditions = [
     [0, 4, 8],
     [2, 4, 6],
     [0, 1, 2],
@@ -200,6 +250,6 @@ bool checkWin(int player, List<int> gameState) {
     }
   }
 
-  /* No win if none caught */
+  // No win if none caught
   return false;
 }
