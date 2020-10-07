@@ -1,5 +1,4 @@
 // import 'dart:html';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -76,6 +75,16 @@ class _GameState extends State<Game> {
   bool _currentPlayerOne = true;
   bool _roundEnded = false;
 
+  /// Functionality for Next Round Button
+  void _nextRound() {
+    setState(() {
+      _gameState = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+      _count += 1;
+      _currentPlayerOne = _count.isOdd;
+      _roundEnded = false;
+    });
+  }
+
   Widget _playerDisplay(int player, int score, bool current) {
     return Container(
       padding: EdgeInsets.all(6),
@@ -131,8 +140,8 @@ class _GameState extends State<Game> {
       );
 
   Widget _controls() => ButtonBar(
-        alignment: MainAxisAlignment.center,
-        buttonPadding: EdgeInsets.all(4),
+        alignment: MainAxisAlignment.spaceAround,
+        buttonPadding: EdgeInsets.all(8),
         children: [
           // Reset Button
           FlatButton(
@@ -150,14 +159,7 @@ class _GameState extends State<Game> {
           ),
           // Next Round Button
           RaisedButton(
-            onPressed: () {
-              setState(() {
-                _gameState = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-                _count += 1;
-                _currentPlayerOne = _count.isOdd;
-                _roundEnded = false;
-              });
-            },
+            onPressed: _roundEnded ? _nextRound : null,
             child: Text("Next Round!"),
           )
         ],
@@ -216,13 +218,19 @@ class _GameState extends State<Game> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Transform.rotate(
-          angle: pi,
+        RotatedBox(
+          quarterTurns: 2,
           child: _playerDisplay(2, _score[1], !_currentPlayerOne),
         ),
-        _controls(),
+        RotatedBox(
+          quarterTurns: 0,
+          child: _controls(),
+        ),
         _board(),
-        _display(),
+        RotatedBox(
+          quarterTurns: 0,
+          child: _display(),
+        ),
         _playerDisplay(1, _score[0], _currentPlayerOne),
       ],
     );
