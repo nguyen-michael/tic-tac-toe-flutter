@@ -119,3 +119,12 @@ After getting the spots to Generate based on input (nothing difficult), I strugg
 Layout and Constraints in Flutter need to be thought of differently than other types of layouts and constraints. ...
 
 I'll need to create a board that generates a constrained 3x3 square grid and have that be the board.
+
+### Layouts
+Layouts in Flutter is definitely a bit different than HTML/CSS style layout, but conceptually very similar. I just need to learn the various arguments for the Widget constructors. There is a learning curve for the layouts and I would like to learn more about the sizing and positioning of elements.
+
+### Coding in Dart/Flutter
+The tooling is fantastic, after just two days of working on this, I am learning quite a lot about Dart/Flutter just through the documentation in the editor. Coming from languages without strong typing, I did not find it particularly hard to have to type in the types. In fact, they certainly help with catching errors, which I appreciate.
+
+### "Finishing"
+I've gotten the basic tic tac toe functionality, with score counters, basically enough to play the pen and paper game without using up sheets of paper! Obviously much more could be implemented, especially a cleaner UI but as practice, I definitely have learned a lot. Moving on I will tidy up the metadata and icon and attempt to post this to the Play Store. I'll also be looking forward to seeing if I could work on iOS on my windows system.
