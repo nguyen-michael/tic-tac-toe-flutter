@@ -1,5 +1,5 @@
 // import 'dart:html';
-
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           title: Text('Ticky Tacky'),
         ),
-        body: Board(),
+        body: Game(),
       ),
     );
   }
@@ -64,12 +64,12 @@ class Spot extends StatelessWidget {
   spots
  */
 
-class Board extends StatefulWidget {
+class Game extends StatefulWidget {
   @override
-  _BoardState createState() => _BoardState();
+  _GameState createState() => _GameState();
 }
 
-class _BoardState extends State<Board> {
+class _GameState extends State<Game> {
   List _gameState = [0, 0, 0, 0, 0, 0, 0, 0, 0];
   List _score = [0, 0, 0]; //p1, p2, draws
   int _count = 1;
@@ -106,7 +106,10 @@ class _BoardState extends State<Board> {
       );
 
   Widget _controls() => ButtonBar(
+        alignment: MainAxisAlignment.center,
+        buttonPadding: EdgeInsets.all(4),
         children: [
+          // Reset Button
           FlatButton(
             onPressed: null,
             onLongPress: () {
@@ -119,7 +122,7 @@ class _BoardState extends State<Board> {
             },
             child: Text("Hold for New Session"),
           ),
-          // Reset button
+          // Next Round Button
           FlatButton(
             onPressed: () {
               setState(() {
@@ -132,7 +135,7 @@ class _BoardState extends State<Board> {
         ],
       );
 
-  Widget _gameBoard() => Expanded(
+  Widget _board() => Expanded(
         child: GridView.builder(
           gridDelegate:
               SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
@@ -163,11 +166,40 @@ class _BoardState extends State<Board> {
     return Column(
       children: [
         _display(),
+        Transform.rotate(
+          angle: pi,
+          child: _playerDisplay(2, _score[1], !_currentPlayerOne),
+        ),
         _controls(),
-        _gameBoard(),
+        _board(),
         _playerDisplay(1, _score[0], _currentPlayerOne),
-        _playerDisplay(2, _score[1], !_currentPlayerOne),
       ],
     );
   }
+}
+
+/* Utility function that checks if a player has won */
+/* Invoked right after a player plays */
+bool checkWin(int player, List<int> gameState) {
+  List<List<int>> winConditions = [
+    [0, 4, 8],
+    [2, 4, 6],
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8]
+  ];
+
+  for (List winCondition in winConditions) {
+    if (gameState[winCondition[0]] == player &&
+        gameState[winCondition[1]] == player &&
+        gameState[winCondition[2]] == player) {
+      return true;
+    }
+  }
+
+  /* No win if none caught */
+  return false;
 }
