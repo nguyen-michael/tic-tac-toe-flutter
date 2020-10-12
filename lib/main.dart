@@ -176,6 +176,8 @@ class _GameState extends State<Game> {
             ),
             onTap: () {
               setState(() {
+                int _originalState = _gameState[index];
+
                 if (_currentPlayerOne &&
                     _gameState[index] == 0 &&
                     !_roundEnded) {
@@ -206,7 +208,9 @@ class _GameState extends State<Game> {
                 }
 
                 // Turn over to other player once everything falls through
-                if (!_roundEnded) _currentPlayerOne = !_currentPlayerOne;
+                // and user clicked an empty square
+                if (!_roundEnded && _originalState == 0)
+                  _currentPlayerOne = !_currentPlayerOne;
               });
             },
           ),
