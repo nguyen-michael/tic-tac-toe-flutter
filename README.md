@@ -3,8 +3,8 @@
 White-belt level Tic-Tac-Toe to get my toes wet with Flutter/Dart. Now in [Early Access on Google Play](https://play.google.com/store/apps/details?id=com.nguyenmichael.tic_tac_toe)! 
 
 
-![Screenshot 1]("./screenshots/screen1.png")
-![Screenshot 2]("./screenshots/screen2.png")
+![Screenshot 1](./screenshots/screen1.png)
+![Screenshot 2](./screenshots/screen2.png)
 
 ### Brainstorm a tic-tac-toe app
 
